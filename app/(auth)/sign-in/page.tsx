@@ -1,21 +1,33 @@
 "use client"
-import React from 'react'
+import React, { useContext } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { useGoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
 import { GetAuthUserData } from '@/services/GlobalApi';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { AuthContext } from '@/context/AuthContext';
 
 function SignIn() {
-    
+
+const createUser = useMutation(api.users.CreateUser);
+const{user, setUser} = useContext(AuthContext);
 const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       console.log(tokenResponse);
       if(typeof window !== 'undefined'){
         localStorage.setItem('user_token', tokenResponse.access_token);
       }
-      const user = GetAuthUserData(tokenResponse.access_token);
-      console.log(user);
+      const user = await GetAuthUserData(tokenResponse.access_token);
+    //   Save User Data to Convex DB
+      const result = await createUser({
+        name:user?.name,
+        email:user?.email,
+        picture:user.picture
+      })
+      if(result){
+        setUser(user);
+      }
     },
     onError: errorResponse => console.log(errorResponse),
   });
