@@ -1,17 +1,19 @@
 "use client"
 import React, { useContext } from 'react'
 import Image from 'next/image'
-import { Button } from '@/components/ui/button'
 import { useGoogleLogin } from '@react-oauth/google';
 import { GetAuthUserData } from '@/services/GlobalApi';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { AuthContext } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { PulsatingButton } from "@/components/magicui/pulsating-button";
 
 function SignIn() {
 
 const createUser = useMutation(api.users.CreateUser);
 const{user, setUser} = useContext(AuthContext);
+const router = useRouter();
 const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       console.log(tokenResponse);
@@ -27,6 +29,7 @@ const googleLogin = useGoogleLogin({
       })
       if(result){
         setUser(user);
+        router.replace('/ai-assistants');
       }
     },
     onError: errorResponse => console.log(errorResponse),
@@ -39,7 +42,7 @@ const googleLogin = useGoogleLogin({
                 height={100}
                 width={100} />
                 <h2 className='text-2xl'>Sign-In to your Personal Assistant</h2>
-                <Button onClick={() => googleLogin()}>Sign-In with Google Account</Button>
+                <PulsatingButton onClick={() => googleLogin()}>Sign-In with Google Account</PulsatingButton>
         </div>
     </div>
   )
