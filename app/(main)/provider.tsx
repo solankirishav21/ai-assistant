@@ -1,11 +1,12 @@
 "use client"
-import React, { useContext, useEffect } from 'react'
-import Header from './_components/Header';
+import React, { useContext, useEffect, useState } from 'react'
 import { GetAuthUserData } from '@/services/GlobalApi';
 import { useRouter } from 'next/navigation';
 import { useConvex } from 'convex/react';
 import { AuthContext } from '@/context/AuthContext';
 import { api } from '@/convex/_generated/api';
+import { Assistant } from 'next/font/google';
+import { AssistantContext } from '@/context/AssistantContext';
 
 function Provider({
     children,
@@ -16,6 +17,7 @@ function Provider({
     const router = useRouter();
     const convex = useConvex();
     const { user, setUser} = useContext(AuthContext)
+    const [assistant, setAssistant] = useState();
 
     useEffect(() => {
         CheckUseAuth();
@@ -44,8 +46,9 @@ function Provider({
     }
   return (
     <div>
-        <Header />
+        <AssistantContext.Provider value={{assistant, setAssistant}}>
             {children}   
+        </AssistantContext.Provider>
     </div>
   )
 }

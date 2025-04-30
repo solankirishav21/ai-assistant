@@ -1,4 +1,3 @@
-// import { qu } from './../node_modules/convex/src/cli/codegen_templates/component_server';
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -6,7 +5,7 @@ export const CreateUser = mutation({
     args:{
         name: v.string(),
         email: v.string(),
-        picture: v.string()
+        picture: v.string(),
     },
     handler: async (ctx, args) => {
         // If user already exists, return the user
@@ -19,15 +18,15 @@ export const CreateUser = mutation({
                name: args.name,
                email: args.email,
                picture: args.picture,
-               credits: 5000 
+               credits: 5000,
             }
-            const result = await ctx.db.insert("users", data);
-            return data
+            const _id = await ctx.db.insert("users", data);
+            return {_id, ...data};
         } 
         return user[0];
     }
 
-})
+});
 export const GetUser = query({
     args:{
         email: v.string()

@@ -10,6 +10,7 @@ import { api } from '@/convex/_generated/api';
 import { AuthContext } from '@/context/AuthContext';
 import { Loader2Icon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Header from '../_components/Header';
 
 export type ASSISTANT ={
   id: number;
@@ -58,7 +59,7 @@ function AIAssistants() {
     const result = await convex.query(api.userAiAssistants.GetAllUserAssistants, {
       uid:user._id
     });
-    console.log('-------------------------->>>>>>', result);
+    // console.log('-------------------------->>>>>>', result);
     if(result.length >0){
       // New Screen containing the selected assistants
       router.replace('workspace');
@@ -71,6 +72,8 @@ function AIAssistants() {
   },[user])
 
   return (
+    <>
+    <Header />
     <div className='px-10 mt-20 md:px-28 lg:px-36 xl:px-48'>
       <div className="flex items-center justify-between">
         <div>
@@ -108,6 +111,7 @@ function AIAssistants() {
     </div>
 
     </div>
+    </>
   )
 }
 

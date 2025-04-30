@@ -7,7 +7,7 @@ export default defineSchema({
         email: v.string(),
         picture: v.string(),
         credits: v.number(),
-        orderId: v.optional(v.string()),
+        orderId: v.optional(v.string())
     }),
 
     userAiAssistants: defineTable({
